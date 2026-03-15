@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع إدارة العيادة الطبية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        nav {
+            background: var(--dark);
+            padding: 1rem 0;
+        }
+
+        .nav-tabs {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .nav-tabs li {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .nav-tabs li.active {
+            background: var(--secondary);
+        }
+
+        .nav-tabs li:hover {
+            background: var(--secondary);
+        }
+
+        .section {
+            display: none;
+            background: white;
+            padding: 2rem;
+            margin: 1rem 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin: 0.25rem;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: right;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: var(--light);
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: var(--dark);
+            font-weight: bold;
+        }
+
+        .search-box {
+            margin: 1rem 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .search-box input {
+            flex: 1;
+        }
+
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .badge-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .badge-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .badge-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .auth-section {
+            max-width: 500px;
+            margin: 5rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab.active {
+            border-bottom: 3px solid var(--secondary);
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="authContainer">
+        <div class="auth-section">
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="showAuthTab('login')">تسجيل الدخول</div>
+                <div class="auth-tab" onclick="showAuthTab('register')">إنشاء حساب</div>
+            </div>
+
+            <div id="loginForm" class="auth-form">
+                <h2>تسجيل الدخول</h2>
+                <form onsubmit="login(event)">
+                    <div class="form-group">
+                        <label for="loginUsername">اسم المستخدم</label>
+                        <input type="text" id="loginUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">كلمة المرور</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">تسجيل الدخول</button>
+                </form>
+            </div>
+
+            <div id="registerForm" class="auth-form hidden">
+                <h2>إنشاء حساب جديد</h2>
+                <form onsubmit="register(event)">
+                    <div class="form-group">
+                        <label for="registerFullName">الاسم الكامل</label>
+                        <input type="text" id="registerFullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerUsername">اسم المستخدم</label>
+                        <input type="text" id="registerUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">كلمة المرور</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerRole">نوع المستخدم</label>
+                        <select id="registerRole">
+                            <option value="user">مستخدم عادي</option>
+                            <option value="admin">مسؤول</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%;">إنشاء حساب</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="appContainer" class="hidden">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <h1>موقع إدارة العيادة الطبية</h1>
+                </div>
+                <div class="user-info">
+                    <span id="currentUser">مرحباً!</span>
+                    <button class="btn btn-danger" onclick="logout()">تسجيل الخروج</button>
+                </div>
+            </div>
+        </header>
+
+        <nav>
+            <div class="container">
+                <ul class="nav-tabs">
+                    <li class="active" onclick="showSection('dashboard')">لوحة التحكم</li>
+                    <li onclick="showSection('patients')">إدارة المرضى</li>
+                    <li onclick="showSection('appointments')">المواعيد</li>
+                    <li onclick="showSection('medical-records')">السجلات الطبية</li>
+                    <li id="usersTab" class="hidden" onclick="showSection('users')">إدارة المستخدمين</li>
+                    <li onclick="showSection('reports')">التقارير</li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div id="alert" class="alert"></div>
+
+            <section id="dashboard" class="section active">
+                <h2>لوحة التحكم</h2>
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <h3 id="totalPatients">0</h3>
+                        <p>إجمالي المرضى</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="todayAppointments">0</h3>
+                        <p>مواعيد اليوم</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="pendingAppointments">0</h3>
+                        <p>مواعيد قيد الانتظار</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="totalRecords">0</h3>
+                        <p>السجلات الطبية</p>
+                    </div>
+                </div>
+
+                <div class="recent-activities">
+                    <h3>أحدث المواعيد</h3>
+                    <div class="table-container">
+                        <table id="recentAppointmentsTable">
+                            <thead>
+                                <tr>
+                                    <th>اسم المريض</th>
+                                    <th>التاريخ</th>
+                                    <th>الوقت</th>
+                                    <th>الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="patients" class="section">
+                <h2>إدارة المرضى</h2>
+                
+                <div class="search-box">
+                    <input type="text" id="searchPatient" placeholder="ابحث عن مريض بالاسم أو الرقم القومي..." onkeyup="searchPatients()">
+                    <button class="btn btn-primary" onclick="showPatientForm()">إضافة مريض جديد</button>
+                </div>
+
+                <div id="patientForm" style="display: none;">
+                    <h3 id="patientFormTitle">إضافة مريض جديد</h3>
+                    <form id="patientFormElement" onsubmit="savePatient(event)">
+                        <input type="hidden" id="patientId">
+                        <div class="form-group">
+                            <label for="patientName">اسم المريض</label>
+                            <input type="text" id="patientName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="patientNationalId">الرقم القومي</label>
+                            <input type="text" id="patientNationalId" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="patientPhone">رقم الهاتف</label>
+                            <input type="tel" id="patientPhone">
+                        </div>
+                        <div class="form-group">
+                            <label for="patientEmail">البريد الإلكتروني</label>
+                            <input type="email" id="patientEmail">
+                        </div>
+                        <div class="form-group">
+                            <label for="patientAddress">العنوان</label>
+                            <textarea id="patientAddress" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="patientGender">الجنس</label>
+                            <select id="patientGender">
+                                <option value="ذكر">ذكر</option>
+                                <option value="أنثى">أنثى</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="patientBirthDate">تاريخ الميلاد</label>
+                            <input type="date" id="patientBirthDate">
+                        </div>
+                        <button type="submit" class="btn btn-success">حفظ</button>
+                        <button type="button" class="btn btn-danger" onclick="hidePatientForm()">إلغاء</button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <table id="patientsTable">
+                        <thead>
+                            <tr>
+                                <th>الرقم القومي</th>
+                                <th>اسم المريض</th>
+                                <th>رقم الهاتف</th>
+                                <th>الجنس</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="appointments" class="section">
+                <h2>إدارة المواعيد</h2>
+                
+                <button class="btn btn-primary" onclick="showAppointmentForm()">إضافة موعد جديد</button>
+
+                <div id="appointmentForm" style="display: none;">
+                    <h3 id="appointmentFormTitle">إضافة موعد جديد</h3>
+                    <form id="appointmentFormElement" onsubmit="saveAppointment(event)">
+                        <input type="hidden" id="appointmentId">
+                        <div class="form-group">
+                            <label for="appointmentPatient">المريض</label>
+                            <select id="appointmentPatient" required>
+                                <option value="">اختر المريض</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="appointmentDate">التاريخ</label>
+                            <input type="date" id="appointmentDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="appointmentTime">الوقت</label>
+                            <input type="time" id="appointmentTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="appointmentType">نوع الموعد</label>
+                            <select id="appointmentType">
+                                <option value="كشف">كشف</option>
+                                <option value="متابعة">متابعة</option>
+                                <option value="طوارئ">طوارئ</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="appointmentStatus">الحالة</label>
+                            <select id="appointmentStatus">
+                                <option value="مجدول">مجدول</option>
+                                <option value="منتهي">منتهي</option>
+                                <option value="ملغي">ملغي</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="appointmentNotes">ملاحظات</label>
+                            <textarea id="appointmentNotes" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">حفظ</button>
+                        <button type="button" class="btn btn-danger" onclick="hideAppointmentForm()">إلغاء</button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <table id="appointmentsTable">
+                        <thead>
+                            <tr>
+                                <th>اسم المريض</th>
+                                <th>التاريخ</th>
+                                <th>الوقت</th>
+                                <th>النوع</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="medical-records" class="section">
+                <h2>السجلات الطبية</h2>
+                
+                <button class="btn btn-primary" onclick="showMedicalRecordForm()">إضافة سجل طبي</button>
+
+                <div id="medicalRecordForm" style="display: none;">
+                    <h3 id="medicalRecordFormTitle">إضافة سجل طبي</h3>
+                    <form id="medicalRecordFormElement" onsubmit="saveMedicalRecord(event)">
+                        <input type="hidden" id="medicalRecordId">
+                        <div class="form-group">
+                            <label for="medicalRecordPatient">المريض</label>
+                            <select id="medicalRecordPatient" required onchange="loadPatientHistory()">
+                                <option value="">اختر المريض</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="medicalRecordDate">تاريخ الزيارة</label>
+                            <input type="date" id="medicalRecordDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="medicalRecordDiagnosis">التشخيص</label>
+                            <textarea id="medicalRecordDiagnosis" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="medicalRecordTreatment">العلاج</label>
+                            <textarea id="medicalRecordTreatment" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="medicalRecordPrescription">الوصفة الطبية</label>
+                            <textarea id="medicalRecordPrescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="medicalRecordNotes">ملاحظات إضافية</label>
+                            <textarea id="medicalRecordNotes" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">حفظ</button>
+                        <button type="button" class="btn btn-danger" onclick="hideMedicalRecordForm()">إلغاء</button>
+                    </form>
+                </div>
+
+                <div id="patientHistory" style="display: none; margin-top: 2rem;">
+                    <h3>التاريخ الطبي للمريض</h3>
+                    <div class="table-container">
+                        <table id="patientHistoryTable">
+                            <thead>
+                                <tr>
+                                    <th>تاريخ الزيارة</th>
+                                    <th>التشخيص</th>
+                                    <th>العلاج</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="users" class="section">
+                <h2>إدارة المستخدمين</h2>
+                
+                <button class="btn btn-primary" onclick="showUserForm()">إضافة مستخدم جديد</button>
+
+                <div id="userForm" style="display: none;">
+                    <h3 id="userFormTitle">إضافة مستخدم جديد</h3>
+                    <form id="userFormElement" onsubmit="saveUser(event)">
+                        <input type="hidden" id="userId">
+                        <div class="form-group">
+                            <label for="userFullName">الاسم الكامل</label>
+                            <input type="text" id="userFullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userUsername">اسم المستخدم</label>
+                            <input type="text" id="userUsername" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userPassword">كلمة المرور</label>
+                            <input type="password" id="userPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userRole">نوع المستخدم</label>
+                            <select id="userRole">
+                                <option value="user">مستخدم عادي</option>
+                                <option value="admin">مسؤول</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">حفظ</button>
+                        <button type="button" class="btn btn-danger" onclick="hideUserForm()">إلغاء</button>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>اسم المستخدم</th>
+                                <th>الاسم الكامل</th>
+                                <th>نوع المستخدم</th>
+                                <th>تاريخ الإنشاء</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="reports" class="section">
+                <h2>التقارير والإحصائيات</h2>
+                
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <h3 id="reportTotalPatients">0</h3>
+                        <p>إجمالي المرضى</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="reportTotalAppointments">0</h3>
+                        <p>إجمالي المواعيد</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="reportCompletedAppointments">0</h3>
+                        <p>المواعيد المنتهية</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="reportTotalRecords">0</h3>
+                        <p>إجمالي السجلات</p>
+                    </div>
+                </div>
+
+                <div class="report-actions">
+                    <button class="btn btn-primary" onclick="generatePatientsReport()">تقرير المرضى</button>
+                    <button class="btn btn-success" onclick="generateAppointmentsReport()">تقرير المواعيد</button>
+                    <button class="btn btn-warning" onclick="generateMedicalReport()">تقرير طبي</button>
+                </div>
+
+                <div id="reportResults" class="table-container" style="margin-top: 2rem;"></div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        class AuthManager {
+            constructor() {
+                this.currentUser = null;
+                this.initializeStorage();
+            }
+
+            initializeStorage() {
+                if (!localStorage.getItem('users')) {
+                    const defaultAdmin = {
+                        id: '1',
+                        username: 'admin',
+                        password: 'admin123',
+                        fullName: 'المسؤول الرئيسي',
+                        role: 'admin',
+                        createdAt: new Date().toISOString()
+                    };
+                    localStorage.setItem('users', JSON.stringify([defaultAdmin]));
+                }
+            }
+
+            getUsers() {
+                return JSON.parse(localStorage.getItem('users')) || [];
+            }
+
+            saveUser(user) {
+                const users = this.getUsers();
+                if (user.id) {
+                    const index = users.findIndex(u => u.id === user.id);
+                    if (index !== -1) {
+                        users[index] = user;
+                    }
+                } else {
+                    user.id = Date.now().toString();
+                    user.createdAt = new Date().toISOString();
+                    users.push(user);
+                }
+                localStorage.setItem('users', JSON.stringify(users));
+                return user;
+            }
+
+            deleteUser(id) {
+                const users = this.getUsers().filter(u => u.id !== id);
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            login(username, password) {
+                const users = this.getUsers();
+                const user = users.find(u => u.username === username && u.password === password);
+                if (user) {
+                    this.currentUser = user;
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    return true;
+                }
+                return false;
+            }
+
+            logout() {
+                this.currentUser = null;
+                localStorage.removeItem('currentUser');
+            }
+
+            getCurrentUser() {
+                if (!this.currentUser) {
+                    const storedUser = localStorage.getItem('currentUser');
+                    if (storedUser) {
+                        this.currentUser = JSON.parse(storedUser);
+                    }
+                }
+                return this.currentUser;
+            }
+
+            isLoggedIn() {
+                return this.getCurrentUser() !== null;
+            }
+
+            isAdmin() {
+                const user = this.getCurrentUser();
+                return user && user.role === 'admin';
+            }
+        }
+
+        class ClinicStorage {
+            constructor(authManager) {
+                this.authManager = authManager;
+                this.initializeStorage();
+            }
+
+            initializeStorage() {
+                const userId = this.getCurrentUserId();
+                if (!localStorage.getItem(`patients_${userId}`)) {
+                    localStorage.setItem(`patients_${userId}`, JSON.stringify([]));
+                }
+                if (!localStorage.getItem(`appointments_${userId}`)) {
+                    localStorage.setItem(`appointments_${userId}`, JSON.stringify([]));
+                }
+                if (!localStorage.getItem(`medicalRecords_${userId}`)) {
+                    localStorage.setItem(`medicalRecords_${userId}`, JSON.stringify([]));
+                }
+            }
+
+            getCurrentUserId() {
+                const user = this.authManager.getCurrentUser();
+                return user ? user.id : 'guest';
+            }
+
+            getPatients() {
+                const userId = this.getCurrentUserId();
+                return JSON.parse(localStorage.getItem(`patients_${userId}`)) || [];
+            }
+
+            savePatient(patient) {
+                const userId = this.getCurrentUserId();
+                const patients = this.getPatients();
+                if (patient.id) {
+                    const index = patients.findIndex(p => p.id === patient.id);
+                    if (index !== -1) {
+                        patients[index] = patient;
+                    }
+                } else {
+                    patient.id = Date.now().toString();
+                    patient.createdAt = new Date().toISOString();
+                    patients.push(patient);
+                }
+                localStorage.setItem(`patients_${userId}`, JSON.stringify(patients));
+                return patient;
+            }
+
+            deletePatient(id) {
+                const userId = this.getCurrentUserId();
+                const patients = this.getPatients().filter(p => p.id !== id);
+                localStorage.setItem(`patients_${userId}`, JSON.stringify(patients));
+                
+                const appointments = this.getAppointments().filter(a => a.patientId !== id);
+                localStorage.setItem(`appointments_${userId}`, JSON.stringify(appointments));
+                
+                const medicalRecords = this.getMedicalRecords().filter(m => m.patientId !== id);
+                localStorage.setItem(`medicalRecords_${userId}`, JSON.stringify(medicalRecords));
+            }
+
+            getAppointments() {
+                const userId = this.getCurrentUserId();
+                return JSON.parse(localStorage.getItem(`appointments_${userId}`)) || [];
+            }
+
+            saveAppointment(appointment) {
+                const userId = this.getCurrentUserId();
+                const appointments = this.getAppointments();
+                if (appointment.id) {
+                    const index = appointments.findIndex(a => a.id === appointment.id);
+                    if (index !== -1) {
+                        appointments[index] = appointment;
+                    }
+                } else {
+                    appointment.id = Date.now().toString();
+                    appointment.createdAt = new Date().toISOString();
+                    appointments.push(appointment);
+                }
+                localStorage.setItem(`appointments_${userId}`, JSON.stringify(appointments));
+                return appointment;
+            }
+
+            deleteAppointment(id) {
+                const userId = this.getCurrentUserId();
+                const appointments = this.getAppointments().filter(a => a.id !== id);
+                localStorage.setItem(`appointments_${userId}`, JSON.stringify(appointments));
+            }
+
+            getMedicalRecords() {
+                const userId = this.getCurrentUserId();
+                return JSON.parse(localStorage.getItem(`medicalRecords_${userId}`)) || [];
+            }
+
+            saveMedicalRecord(record) {
+                const userId = this.getCurrentUserId();
+                const records = this.getMedicalRecords();
+                if (record.id) {
+                    const index = records.findIndex(r => r.id === record.id);
+                    if (index !== -1) {
+                        records[index] = record;
+                    }
+                } else {
+                    record.id = Date.now().toString();
+                    record.createdAt = new Date().toISOString();
+                    records.push(record);
+                }
+                localStorage.setItem(`medicalRecords_${userId}`, JSON.stringify(records));
+                return record;
+            }
+
+            deleteMedicalRecord(id) {
+                const userId = this.getCurrentUserId();
+                const records = this.getMedicalRecords().filter(r => r.id !== id);
+                localStorage.setItem(`medicalRecords_${userId}`, JSON.stringify(records));
+            }
+        }
+
+        const authManager = new AuthManager();
+        const storage = new ClinicStorage(authManager);
+
+        function showAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.add('hidden'));
+            
+            if (tab === 'login') {
+                document.querySelector('.auth-tab:nth-child(1)').classList.add('active');
+                document.getElementById('loginForm').classList.remove('hidden');
+            } else {
+                document.querySelector('.auth-tab:nth-child(2)').classList.add('active');
+                document.getElementById('registerForm').classList.remove('hidden');
+            }
+        }
+
+        function login(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (authManager.login(username, password)) {
+                showApp();
+                showAlert('تم تسجيل الدخول بنجاح', 'success');
+            } else {
+                showAlert('اسم المستخدم أو كلمة المرور غير صحيحة', 'error');
+            }
+        }
+
+        function register(event) {
+            event.preventDefault();
+            const fullName = document.getElementById('registerFullName').value;
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            const role = document.getElementById('registerRole').value;
+            
+            const users = authManager.getUsers();
+            if (users.find(u => u.username === username)) {
+                showAlert('اسم المستخدم موجود مسبقاً', 'error');
+                return;
+            }
+            
+            const newUser = {
+                fullName,
+                username,
+                password,
+                role
+            };
+            
+            authManager.saveUser(newUser);
+            showAlert('تم إنشاء الحساب بنجاح', 'success');
+            showAuthTab('login');
+            document.getElementById('registerForm').reset();
+        }
+
+        function logout() {
+            authManager.logout();
+            showAuth();
+            showAlert('تم تسجيل الخروج بنجاح', 'success');
+        }
+
+        function showAuth() {
+            document.getElementById('authContainer').classList.remove('hidden');
+            document.getElementById('appContainer').classList.add('hidden');
+        }
+
+        function showApp() {
+            document.getElementById('authContainer').classList.add('hidden');
+            document.getElementById('appContainer').classList.remove('hidden');
+            
+            const user = authManager.getCurrentUser();
+            document.getElementById('currentUser').textContent = `مرحباً ${user.fullName}`;
+            
+            if (authManager.isAdmin()) {
+                document.getElementById('usersTab').classList.remove('hidden');
+            } else {
+                document.getElementById('usersTab').classList.add('hidden');
+            }
+            
+            updateDashboard();
+            loadPatients();
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            document.querySelectorAll('.nav-tabs li').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+
+            updateDashboard();
+            if (sectionId === 'patients') loadPatients();
+            if (sectionId === 'appointments') loadAppointments();
+            if (sectionId === 'medical-records') loadMedicalRecords();
+            if (sectionId === 'users') loadUsers();
+            if (sectionId === 'reports') loadReports();
+        }
+
+        function showAlert(message, type = 'success') {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = `alert alert-${type}`;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+
+        // باقي الدوال الخاصة بإدارة المرضى والمواعيد والسجلات الطبية والتقارير
+        // (نفس الدوال السابقة مع تعديلات بسيطة لاستخدام نظام المستخدمين الجديد)
+
+        function showPatientForm(patient = null) {
+            const form = document.getElementById('patientForm');
+            const title = document.getElementById('patientFormTitle');
+            const formElement = document.getElementById('patientFormElement');
+            
+            if (patient) {
+                title.textContent = 'تعديل بيانات المريض';
+                document.getElementById('patientId').value = patient.id;
+                document.getElementById('patientName').value = patient.name || '';
+                document.getElementById('patientNationalId').value = patient.nationalId || '';
+                document.getElementById('patientPhone').value = patient.phone || '';
+                document.getElementById('patientEmail').value = patient.email || '';
+                document.getElementById('patientAddress').value = patient.address || '';
+                document.getElementById('patientGender').value = patient.gender || 'ذكر';
+                document.getElementById('patientBirthDate').value = patient.birthDate || '';
+            } else {
+                title.textContent = 'إضافة مريض جديد';
+                formElement.reset();
+                document.getElementById('patientId').value = '';
+            }
+            
+            form.style.display = 'block';
+        }
+
+        function hidePatientForm() {
+            document.getElementById('patientForm').style.display = 'none';
+        }
+
+        function savePatient(event) {
+            event.preventDefault();
+            
+            const patient = {
+                id: document.getElementById('patientId').value,
+                name: document.getElementById('patientName').value,
+                nationalId: document.getElementById('patientNationalId').value,
+                phone: document.getElementById('patientPhone').value,
+                email: document.getElementById('patientEmail').value,
+                address: document.getElementById('patientAddress').value,
+                gender: document.getElementById('patientGender').value,
+                birthDate: document.getElementById('patientBirthDate').value
+            };
+
+            storage.savePatient(patient);
+            showAlert('تم حفظ بيانات المريض بنجاح');
+            hidePatientForm();
+            loadPatients();
+            updateDashboard();
+        }
+
+        function loadPatients() {
+            const patients = storage.getPatients();
+            const tbody = document.querySelector('#patientsTable tbody');
+            tbody.innerHTML = '';
+
+            patients.forEach(patient => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${patient.nationalId}</td>
+                    <td>${patient.name}</td>
+                    <td>${patient.phone || '-'}</td>
+                    <td>${patient.gender}</td>
+                    <td>
+                        <button class="btn btn-warning" onclick="editPatient('${patient.id}')">تعديل</button>
+                        <button class="btn btn-danger" onclick="deletePatient('${patient.id}')">حذف</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function editPatient(id) {
+            const patients = storage.getPatients();
+            const patient = patients.find(p => p.id === id);
+            if (patient) {
+                showPatientForm(patient);
+            }
+        }
+
+        function deletePatient(id) {
+            if (confirm('هل أنت متأكد من حذف هذا المريض؟ سيتم حذف جميع بياناته المرتبطة أيضًا.')) {
+                storage.deletePatient(id);
+                showAlert('تم حذف المريض بنجاح');
+                loadPatients();
+                updateDashboard();
+            }
+        }
+
+        function searchPatients() {
+            const searchTerm = document.getElementById('searchPatient').value.toLowerCase();
+            const patients = storage.getPatients();
+            const tbody = document.querySelector('#patientsTable tbody');
+            tbody.innerHTML = '';
+
+            const filteredPatients = patients.filter(patient => 
+                patient.name.toLowerCase().includes(searchTerm) ||
+                patient.nationalId.includes(searchTerm)
+            );
+
+            filteredPatients.forEach(patient => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${patient.nationalId}</td>
+                    <td>${patient.name}</td>
+                    <td>${patient.phone || '-'}</td>
+                    <td>${patient.gender}</td>
+                    <td>
+                        <button class="btn btn-warning" onclick="editPatient('${patient.id}')">تعديل</button>
+                        <button class="btn btn-danger" onclick="deletePatient('${patient.id}')">حذف</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showAppointmentForm(appointment = null) {
+            const form = document.getElementById('appointmentForm');
+            const title = document.getElementById('appointmentFormTitle');
+            const patientSelect = document.getElementById('appointmentPatient');
+            
+            patientSelect.innerHTML = '<option value="">اختر المريض</option>';
+            storage.getPatients().forEach(patient => {
+                patientSelect.innerHTML += `<option value="${patient.id}">${patient.name} - ${patient.nationalId}</option>`;
+            });
+
+            if (appointment) {
+                title.textContent = 'تعديل الموعد';
+                document.getElementById('appointmentId').value = appointment.id;
+                document.getElementById('appointmentPatient').value = appointment.patientId;
+                document.getElementById('appointmentDate').value = appointment.date;
+                document.getElementById('appointmentTime').value = appointment.time;
+                document.getElementById('appointmentType').value = appointment.type || 'كشف';
+                document.getElementById('appointmentStatus').value = appointment.status || 'مجدول';
+                document.getElementById('appointmentNotes').value = appointment.notes || '';
+            } else {
+                title.textContent = 'إضافة موعد جديد';
+                document.getElementById('appointmentFormElement').reset();
+                document.getElementById('appointmentId').value = '';
+                document.getElementById('appointmentDate').value = new Date().toISOString().split('T')[0];
+            }
+            
+            form.style.display = 'block';
+        }
+
+        function hideAppointmentForm() {
+            document.getElementById('appointmentForm').style.display = 'none';
+        }
+
+        function saveAppointment(event) {
+            event.preventDefault();
+            
+            const appointment = {
+                id: document.getElementById('appointmentId').value,
+                patientId: document.getElementById('appointmentPatient').value,
+                date: document.getElementById('appointmentDate').value,
+                time: document.getElementById('appointmentTime').value,
+                type: document.getElementById('appointmentType').value,
+                status: document.getElementById('appointmentStatus').value,
+                notes: document.getElementById('appointmentNotes').value
+            };
+
+            storage.saveAppointment(appointment);
+            showAlert('تم حفظ الموعد بنجاح');
+            hideAppointmentForm();
+            loadAppointments();
+            updateDashboard();
+        }
+
+        function loadAppointments() {
+            const appointments = storage.getAppointments();
+            const patients = storage.getPatients();
+            const tbody = document.querySelector('#appointmentsTable tbody');
+            tbody.innerHTML = '';
+
+            appointments.forEach(appointment => {
+                const patient = patients.find(p => p.id === appointment.patientId);
+                const statusBadge = appointment.status === 'مجدول' ? 'badge-warning' : 
+                                  appointment.status === 'منتهي' ? 'badge-success' : 'badge-danger';
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${patient ? patient.name : 'مريض محذوف'}</td>
+                    <td>${appointment.date}</td>
+                    <td>${appointment.time}</td>
+                    <td>${appointment.type}</td>
+                    <td><span class="badge ${statusBadge}">${appointment.status}</span></td>
+                    <td>
+                        <button class="btn btn-warning" onclick="editAppointment('${appointment.id}')">تعديل</button>
+                        <button class="btn btn-danger" onclick="deleteAppointment('${appointment.id}')">حذف</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function editAppointment(id) {
+            const appointments = storage.getAppointments();
+            const appointment = appointments.find(a => a.id === id);
+            if (appointment) {
+                showAppointmentForm(appointment);
+            }
+        }
+
+        function deleteAppointment(id) {
+            if (confirm('هل أنت متأكد من حذف هذا الموعد؟')) {
+                storage.deleteAppointment(id);
+                showAlert('تم حذف الموعد بنجاح');
+                loadAppointments();
+                updateDashboard();
+            }
+        }
+
+        function showMedicalRecordForm(record = null) {
+            const form = document.getElementById('medicalRecordForm');
+            const title = document.getElementById('medicalRecordFormTitle');
+            const patientSelect = document.getElementById('medicalRecordPatient');
+            
+            patientSelect.innerHTML = '<option value="">اختر المريض</option>';
+            storage.getPatients().forEach(patient => {
+                patientSelect.innerHTML += `<option value="${patient.id}">${patient.name} - ${patient.nationalId}</option>`;
+            });
+
+            if (record) {
+                title.textContent = 'تعديل السجل الطبي';
+                document.getElementById('medicalRecordId').value = record.id;
+                document.getElementById('medicalRecordPatient').value = record.patientId;
+                document.getElementById('medicalRecordDate').value = record.date;
+                document.getElementById('medicalRecordDiagnosis').value = record.diagnosis || '';
+                document.getElementById('medicalRecordTreatment').value = record.treatment || '';
+                document.getElementById('medicalRecordPrescription').value = record.prescription || '';
+                document.getElementById('medicalRecordNotes').value = record.notes || '';
+            } else {
+                title.textContent = 'إضافة سجل طبي';
+                document.getElementById('medicalRecordFormElement').reset();
+                document.getElementById('medicalRecordId').value = '';
+                document.getElementById('medicalRecordDate').value = new Date().toISOString().split('T')[0];
+            }
+            
+            form.style.display = 'block';
+        }
+
+        function hideMedicalRecordForm() {
+            document.getElementById('medicalRecordForm').style.display = 'none';
+            document.getElementById('patientHistory').style.display = 'none';
+        }
+
+        function saveMedicalRecord(event) {
+            event.preventDefault();
+            
+            const record = {
+                id: document.getElementById('medicalRecordId').value,
+                patientId: document.getElementById('medicalRecordPatient').value,
+                date: document.getElementById('medicalRecordDate').value,
+                diagnosis: document.getElementById('medicalRecordDiagnosis').value,
+                treatment: document.getElementById('medicalRecordTreatment').value,
+                prescription: document.getElementById('medicalRecordPrescription').value,
+                notes: document.getElementById('medicalRecordNotes').value
+            };
+
+            storage.saveMedicalRecord(record);
+            showAlert('تم حفظ السجل الطبي بنجاح');
+            hideMedicalRecordForm();
+            loadMedicalRecords();
+            updateDashboard();
+        }
+
+        function loadMedicalRecords() {
+            const records = storage.getMedicalRecords();
+            const patients = storage.getPatients();
+            const tbody = document.querySelector('#patientHistoryTable tbody');
+            tbody.innerHTML = '';
+
+            records.forEach(record => {
+                const patient = patients.find(p => p.id === record.patientId);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.diagnosis}</td>
+                    <td>${record.treatment || '-'}</td>
+                    <td>
+                        <button class="btn btn-warning" onclick="editMedicalRecord('${record.id}')">تعديل</button>
+                        <button class="btn btn-danger" onclick="deleteMedicalRecord('${record.id}')">حذف</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function loadPatientHistory() {
+            const patientId = document.getElementById('medicalRecordPatient').value;
+            if (patientId) {
+                const records = storage.getMedicalRecords().filter(r => r.patientId === patientId);
+                const tbody = document.querySelector('#patientHistoryTable tbody');
+                tbody.innerHTML = '';
+
+                records.forEach(record => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${record.date}</td>
+                        <td>${record.diagnosis}</td>
+                        <td>${record.treatment || '-'}</td>
+                        <td>
+                            <button class="btn btn-warning" onclick="editMedicalRecord('${record.id}')">تعديل</button>
+                            <button class="btn btn-danger" onclick="deleteMedicalRecord('${record.id}')">حذف</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById('patientHistory').style.display = 'block';
+            } else {
+                document.getElementById('patientHistory').style.display = 'none';
+            }
+        }
+
+        function editMedicalRecord(id) {
+            const records = storage.getMedicalRecords();
+            const record = records.find(r => r.id === id);
+            if (record) {
+                showMedicalRecordForm(record);
+            }
+        }
+
+        function deleteMedicalRecord(id) {
+            if (confirm('هل أنت متأكد من حذف هذا السجل الطبي؟')) {
+                storage.deleteMedicalRecord(id);
+                showAlert('تم حذف السجل الطبي بنجاح');
+                loadMedicalRecords();
+                updateDashboard();
+            }
+        }
+
+        function showUserForm(user = null) {
+            const form = document.getElementById('userForm');
+            const title = document.getElementById('userFormTitle');
+            const formElement = document.getElementById('userFormElement');
+            
+            if (user) {
+                title.textContent = 'تعديل بيانات المستخدم';
+                document.getElementById('userId').value = user.id;
+                document.getElementById('userFullName').value = user.fullName || '';
+                document.getElementById('userUsername').value = user.username || '';
+                document.getElementById('userPassword').value = '';
+                document.getElementById('userRole').value = user.role || 'user';
+            } else {
+                title.textContent = 'إضافة مستخدم جديد';
+                formElement.reset();
+                document.getElementById('userId').value = '';
+            }
+            
+            form.style.display = 'block';
+        }
+
+        function hideUserForm() {
+            document.getElementById('userForm').style.display = 'none';
+        }
+
+        function saveUser(event) {
+            event.preventDefault();
+            
+            const user = {
+                id: document.getElementById('userId').value,
+                fullName: document.getElementById('userFullName').value,
+                username: document.getElementById('userUsername').value,
+                password: document.getElementById('userPassword').value,
+                role: document.getElementById('userRole').value
+            };
+
+            authManager.saveUser(user);
+            showAlert('تم حفظ بيانات المستخدم بنجاح');
+            hideUserForm();
+            loadUsers();
+        }
+
+        function loadUsers() {
+            if (!authManager.isAdmin()) return;
+            
+            const users = authManager.getUsers();
+            const currentUser = authManager.getCurrentUser();
+            const tbody = document.querySelector('#usersTable tbody');
+            tbody.innerHTML = '';
+
+            users.forEach(user => {
+                if (user.id === currentUser.id) return; // لا تعرض المستخدم الحالي
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${user.username}</td>
+                    <td>${user.fullName}</td>
+                    <td>${user.role === 'admin' ? 'مسؤول' : 'مستخدم عادي'}</td>
+                    <td>${new Date(user.createdAt).toLocaleDateString('ar-EG')}</td>
+                    <td>
+                        <button class="btn btn-warning" onclick="editUser('${user.id}')">تعديل</button>
+                        <button class="btn btn-danger" onclick="deleteUser('${user.id}')">حذف</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function editUser(id) {
+            const users = authManager.getUsers();
+            const user = users.find(u => u.id === id);
+            if (user) {
+                showUserForm(user);
+            }
+        }
+
+        function deleteUser(id) {
+            if (confirm('هل أنت متأكد من حذف هذا المستخدم؟')) {
+                authManager.deleteUser(id);
+                showAlert('تم حذف المستخدم بنجاح');
+                loadUsers();
+            }
+        }
+
+        function loadReports() {
+            const patients = storage.getPatients();
+            const appointments = storage.getAppointments();
+            const records = storage.getMedicalRecords();
+
+            document.getElementById('reportTotalPatients').textContent = patients.length;
+            document.getElementById('reportTotalAppointments').textContent = appointments.length;
+            document.getElementById('reportCompletedAppointments').textContent = 
+                appointments.filter(a => a.status === 'منتهي').length;
+            document.getElementById('reportTotalRecords').textContent = records.length;
+        }
+
+        function generatePatientsReport() {
+            const patients = storage.getPatients();
+            let html = '<h3>تقرير المرضى</h3><table><thead><tr><th>الرقم القومي</th><th>الاسم</th><th>الهاتف</th><th>الجنس</th></tr></thead><tbody>';
+            
+            patients.forEach(patient => {
+                html += `<tr>
+                    <td>${patient.nationalId}</td>
+                    <td>${patient.name}</td>
+                    <td>${patient.phone || '-'}</td>
+                    <td>${patient.gender}</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('reportResults').innerHTML = html;
+        }
+
+        function generateAppointmentsReport() {
+            const appointments = storage.getAppointments();
+            const patients = storage.getPatients();
+            let html = '<h3>تقرير المواعيد</h3><table><thead><tr><th>المريض</th><th>التاريخ</th><th>الوقت</th><th>النوع</th><th>الحالة</th></tr></thead><tbody>';
+            
+            appointments.forEach(appointment => {
+                const patient = patients.find(p => p.id === appointment.patientId);
+                html += `<tr>
+                    <td>${patient ? patient.name : 'مريض محذوف'}</td>
+                    <td>${appointment.date}</td>
+                    <td>${appointment.time}</td>
+                    <td>${appointment.type}</td>
+                    <td>${appointment.status}</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('reportResults').innerHTML = html;
+        }
+
+        function generateMedicalReport() {
+            const records = storage.getMedicalRecords();
+            const patients = storage.getPatients();
+            let html = '<h3>التقرير الطبي</h3><table><thead><tr><th>المريض</th><th>تاريخ الزيارة</th><th>التشخيص</th><th>العلاج</th></tr></thead><tbody>';
+            
+            records.forEach(record => {
+                const patient = patients.find(p => p.id === record.patientId);
+                html += `<tr>
+                    <td>${patient ? patient.name : 'مريض محذوف'}</td>
+                    <td>${record.date}</td>
+                    <td>${record.diagnosis}</td>
+                    <td>${record.treatment || '-'}</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('reportResults').innerHTML = html;
+        }
+
+        function updateDashboard() {
+            const patients = storage.getPatients();
+            const appointments = storage.getAppointments();
+            const records = storage.getMedicalRecords();
+            const today = new Date().toISOString().split('T')[0];
+
+            document.getElementById('totalPatients').textContent = patients.length;
+            document.getElementById('todayAppointments').textContent = 
+                appointments.filter(a => a.date === today).length;
+            document.getElementById('pendingAppointments').textContent = 
+                appointments.filter(a => a.status === 'مجدول').length;
+            document.getElementById('totalRecords').textContent = records.length;
+
+            const recentAppointments = appointments
+                .sort((a, b) => new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time))
+                .slice(0, 5);
+
+            const tbody = document.querySelector('#recentAppointmentsTable tbody');
+            tbody.innerHTML = '';
+
+            recentAppointments.forEach(appointment => {
+                const patient = patients.find(p => p.id === appointment.patientId);
+                const statusBadge = appointment.status === 'مجدول' ? 'badge-warning' : 
+                                  appointment.status === 'منتهي' ? 'badge-success' : 'badge-danger';
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${patient ? patient.name : 'مريض محذوف'}</td>
+                    <td>${appointment.date}</td>
+                    <td>${appointment.time}</td>
+                    <td><span class="badge ${statusBadge}">${appointment.status}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (authManager.isLoggedIn()) {
+                showApp();
+            } else {
+                showAuth();
+            }
+            
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelectorAll('input[type="date"]').forEach(input => {
+                if (!input.value) {
+                    input.value = today;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
